@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/mui.min.css" />
+    <link rel="stylesheet" href="css/dropload.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/mui.picker.css" />
+    <link rel="stylesheet" href="css/mui.poppicker.css" />
+    <script type="text/javascript" src="js/mui.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/dropload.min.js"></script>
+    <script type="text/javascript" src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/mui.picker.js"></script>
+    <script type="text/javascript" src="js/mui.poppicker.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <style>
+    	.mui-table-view-cell > a:not(.mui-btn){
+    		background: #ff6600;
+			display: block;
+			height: 50px;
+			line-height: 50px;
+			color: #fff;
+			text-align: center;
+			border-radius: 5px;
+			font-size: 18px;
+			margin: 0px;
+			margin-top: 20px;
+			padding: 0;
+    	}
+    	.mui-table-view-cell > a:not(.mui-btn).mui-active{
+    		background: #ff6600;
+    	}
+    	.mui-table-view{
+    		background: none;
+    	}
+    	.historyTask{
+    		background: #eee;
+    	}
+    </style>
+</head>
+<body>
+	<div id="main">
+		<header>
+			<i class="menu" v-on:tap="menu('show')"><img src="images/menu.png" /></i>
+			<span>任务列表</span>
+		</header>
+		<div class="index_item">
+			<ul>
+				<li v-on:tap="loadData(0)"><a href="javascript:;" class="active">未派单（{{count[0]}}）</a></li>
+				<li v-on:tap="loadData(1)"><a href="javascript:;">进行中（{{count[1]}}）</a></li>
+				<div class="clear"></div>
+			</ul>
+		</div>
+		<div class="historyTask">
+			<ul>
+				<template v-for="(value,key) in order_list">
+				<li>
+					<div class="historyTask_price"><span>{{value.jiage}}</span>&nbsp;元</div>
+					<div class="historyTask_time"><i></i>要求&nbsp;<span>尽快送达</span></div>
+					<div class="historyTask_qh">
+						<span>取货</span>
+						<div class="historyTask_qh_main">
+							<h1>{{value.store_name}}</h1>
+							<p>{{value.store_address}}</p>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="historyTask_qh" style="margin-top: 20px;">
+						<span>送货</span>
+						<div class="historyTask_qh_main">
+							<h1 style="line-height: 50px;">{{value.order_address}}</h1>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="historyTask_qh" style="margin-top: 20px;" v-if="value.peisong_id > 0">
+						<span>配送</span>
+						<div class="historyTask_qh_main">
+							<h1 style="line-height: 50px;">{{value.peisong_name}}</h1>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<a href="javascript:;" class="orderac" style="background: green;float: left;width: 49%;" v-on:tap="paidan(value.id,key)">派单</a>
+					<a href="javascript:;" class="orderac" v-on:tap="order_detail(value.id)" style="float: right;width: 49%;">查看</a>
+					<div class="clear"></div>
+				</li>
+				</template>
+			</ul>
+		</div>
+		<!-- 侧滑菜单 -->
+		<div class="menu_bg" v-on:tap="menu('hide')"></div>
+		<div class="menu_layout">
+			<div class="left_menu_header">
+				<div class="left_menu_header_img"><img src="images/dada_icon.png" /></div>
+				<div v-if="user_id != null" v-on:tap="logout">
+					<h1>{{name}}</h1>
+					<p>{{telephone}}</p>
+				</div>
+				<div class="left_menu_header_login" v-on:tap="login" v-if="user_id == null">请登录</div>
+			</div>
+			<div class="left_menu_list">
+				<ul>
+					<!--<li v-on:tap="jump('taskHome.html')"><a href="javascript:;">骑手业绩</a></li>-->
+				</ul>
+			</div>
+			<p class="version"></p>
+		</div>
+	</div>
+</body>
+</html>

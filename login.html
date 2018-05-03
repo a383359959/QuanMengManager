@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/mui.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/mui.min.js"></script>
+    <script type="text/javascript" src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <style type="text/css">
+    	body,html{
+    		background: #fff;
+    	}
+    </style>
+</head>
+<body>
+	<header>
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<span>圈萌校园 - 站长端</span>
+	</header>
+	<div class="h50"></div>
+	<div class="login_main">
+		<ul>
+			<li>
+				<label>用户名：</label>
+				<input type="tel" v-model="username" placeholder="请输入用户名" />
+				<div class="clear"></div>
+			</li>
+			<li>
+				<label>密码：</label>
+				<input type="password" v-model="password" placeholder="请输入密码" />
+				<div class="clear"></div>
+			</li>
+		</ul>
+		<a href="javascript:;" v-on:tap="submit">登录</a>
+	</div>
+	<script type="text/javascript">
+		new Vue({
+			el : '.login_main',
+			data : {
+				username : '',
+				password : ''
+			},
+			methods : {
+				submit : function(){
+					if(this.username == ''){
+						plus.nativeUI.alert('用户名不能为空！',null,'提示','确定');
+					}else if(this.password == ''){
+						plus.nativeUI.alert('密码不能为空！',null,'提示','确定');
+					}else{
+						var info = plus.push.getClientInfo();
+						var option = {
+							username : this.username,
+							password : this.password,
+							token : info.token,
+							clientid : info.clientid,
+							appid : info.appid,
+							appkey : info.appkey,
+						};
+						mui.post(getLocation('User/login.html'),option,function(result){
+							if(result.status == 'success'){
+								plus.storage.setItem('user_id',result.user_id);
+								var index = plus.webview.getLaunchWebview();
+								mui.fire(index,'login');
+								plus.webview.currentWebview().close();
+							}else{
+								plus.nativeUI.alert(result.msg,null,'提示','确定');
+							}
+						},'json');
+					}
+				}
+			}
+		});
+	</script>
+</body>
+</html>

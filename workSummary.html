@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/mui.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/mui.min.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+   	<script type="text/javascript" src="js/dropload.min.js"></script>
+    <link rel="stylesheet" href="css/dropload.css" />
+</head>
+<body>
+	<header>
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<span>工作汇总</span>
+	</header>
+	<div class="workSummary">
+		<ul id="dataList">
+<!--
+			<li>
+				<p>2017-07-07</p>
+				<p>50&nbsp;单</p>
+				<div class="clear"></div>
+			</li>
+			<li>
+				<p>2017-07-07</p>
+				<p>50&nbsp;单</p>
+				<div class="clear"></div>
+			</li>
+			<li>
+				<p>2017-07-07</p>
+				<p>50&nbsp;单</p>
+				<div class="clear"></div>
+			</li>
+			<li>
+				<p>2017-07-07</p>
+				<p>50&nbsp;单</p>
+				<div class="clear"></div>
+			</li>-->
+		</ul>
+	</div>
+</body>
+
+<script>
+	
+	mui.plusReady(function(){
+	
+		var page = 0;
+		loadData();
+
+		function loadData(){
+	
+			$('#dataList').html('');
+	        $('.dropload-down').remove();
+			$('.workSummary').dropload({
+				scrollArea : window,
+				loadDownFn : function(me){
+					page++;
+					
+						var peisong = getLgoin();
+						var peisong_id = peisong.peisong_id;
+	
+						mui.post(getLocation('Index/workSummary.html'),{'peisong_id':peisong_id , 'page':page},
+						function(data){
+	
+							
+							var arr_list = data.data;
+					
+						//JSON.stringify(data.data);
+							if(data.code == '1' && arr_list.length  > 0){
+									
+								for(var i = 0 ; i < arr_list.length ; i++){
+									var _html = "";
+									_html += '<li>';
+									_html += '<p>'+arr_list[i]['datetime']+'</p>';
+									_html += '<p>'+arr_list[i]['count']+'&nbsp;单</p>';
+									_html += '<div class="clear"></div>';
+									_html += '</li>';
+									$('#dataList').append(_html);
+								}
+								
+							}else{
+								me.lock();
+								me.noData();
+							}
+							me.resetload();
+	
+							
+						},"json"
+					);
+				}
+			});
+		}
+	
+});
+	
+</script>
+
+</html>
